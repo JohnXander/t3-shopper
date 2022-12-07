@@ -7,6 +7,11 @@ export default function IndexPage() {
   const [items, setItems] = useState<ShoppingItem[]>([]);
   const itemMutation = trpc.createItem.useMutation();
 
+  const addItemToList = (item: string) => {
+    itemMutation.mutate({ name: item });
+    setItems((prev) => [...prev, { id: "ghi", name: item, checked: false }]);
+  }
+
   return (
     <div>
       <Head>
@@ -21,14 +26,22 @@ export default function IndexPage() {
           <button
             type='button'
             className='bg-violet-500 text-white text-sm p-2 rounded-md transition hover:bg-violet-600'
+            onClick={() => addItemToList("chicken")}
           >
             Add shopping item
           </button>
         </div>
 
         <ul className='mt-4'>
-          {["orange", "mango"].map((item, idx) => {
-            return <li key={idx}>{item}</li>
+          {items.map((item, idx) => {
+            return (
+              <li
+                key={idx}
+                className="flex justify-between items-center"
+              >
+                {item.name}
+              </li>
+            )
           })}
         </ul>
       </main>
