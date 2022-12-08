@@ -1,19 +1,17 @@
+import { ShoppingItem } from '@prisma/client';
 import Head from 'next/head'
 import { useState } from 'react';
 import ItemModal from '../components/ItemModal';
 import { trpc } from '../utils/trpc';
 
 export default function IndexPage() {
-  const [items, setItems] = useState<String[]>([]);
+  const { data, isLoading } = trpc.getAllItems.useQuery();
+  const itemsData = data?.foundItems;
+  
+  const [items, setItems] = useState<ShoppingItem[]>(itemsData as ShoppingItem[]);
   const [modalOpen, setModalOpen] = useState<boolean>(false)
 
-  const itemMutation = trpc.createItem.useMutation();
-  
-  const addItemToList = (item: string) => {
-    itemMutation.mutate({ name: item });
-    setItems((prev) => [...prev, item]);
-    setModalOpen(true)
-  }
+  if (!data || isLoading) return <p>Loading...</p>
 
   return (
     <div>
@@ -23,7 +21,7 @@ export default function IndexPage() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      {modalOpen && <ItemModal setModalOpen={setModalOpen} />}
+      {modalOpen && <ItemModal setModalOpen={setModalOpen} setItems={setItems} />}
       
       <main className='mx-auto my-12 max-w-3xl'>
         <div className='flex justify-between'>
@@ -31,18 +29,18 @@ export default function IndexPage() {
           <button
             type='button'
             className='bg-violet-500 text-white text-sm p-2 rounded-md transition hover:bg-violet-600'
-            onClick={() => addItemToList("oranges")}>
+            onClick={() => setModalOpen(true)}>
             Add shopping item
           </button>
         </div>
 
         <ul className='mt-4'>
-          {items.map((item, idx) => {
+          {items?.map(item => {
             return (
               <li
-                key={idx}
+                key={item.id}
                 className="flex justify-between items-center">
-                <span>{item}</span>
+                <span>{item.name}</span>
               </li>
             )
           })}

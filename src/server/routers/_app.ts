@@ -12,6 +12,12 @@ export const appRouter = router({
       return { createdItem }
     }),
   
+  getAllItems: procedure
+    .query(async () => {
+      const foundItems = await prisma.shoppingItem.findMany();
+      return { foundItems }
+    }),
+  
 });
 
 export type AppRouter = typeof appRouter;
