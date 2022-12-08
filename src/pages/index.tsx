@@ -9,7 +9,7 @@ export default function IndexPage() {
 
   const addItemToList = (item: string) => {
     itemMutation.mutate({ name: item });
-    setItems((prev) => [...prev, { id: "stu", name: item, checked: false }]);
+    setItems((prev) => [...prev, { id: "vwx", name: item, checked: false }]);
   }
 
   return (
@@ -26,7 +26,7 @@ export default function IndexPage() {
           <button
             type='button'
             className='bg-violet-500 text-white text-sm p-2 rounded-md transition hover:bg-violet-600'
-            onClick={() => addItemToList("cod")}
+            onClick={() => addItemToList("beef")}
           >
             Add shopping item
           </button>
