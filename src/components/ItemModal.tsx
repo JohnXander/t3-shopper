@@ -13,7 +13,8 @@ const ItemModal: FC<ItemModalProps> = ({ setModalOpen, setItems }) => {
   
     const addItemToList = (item: string) => {
         itemMutation.mutate({ name: item });
-        setItems((prev) => [...prev, item]);
+        const newItem = {id: "abc", name: item, checked: false}
+        setItems((prev) => [...prev, newItem]);
         setModalOpen(true)
     }
 
