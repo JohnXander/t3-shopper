@@ -9,13 +9,18 @@ export default function IndexPage() {
   const { data, isLoading } = trpc.getAllItems.useQuery();
   const itemsData = data?.foundItems;
 
-  const itemMutation = trpc.deleteItem.useMutation();
+  const deleteMutation = trpc.deleteItem.useMutation();
+  const editMutation = trpc.toggleCheck.useMutation();
   
   const [items, setItems] = useState<ShoppingItem[]>(itemsData as ShoppingItem[]);
   const [modalOpen, setModalOpen] = useState<boolean>(false)
 
+  const toggleCheckItem = (id: string, checked: boolean) => {
+    editMutation.mutate({ id, checked });
+  }
+
   const deleteItem = (id: string) => {
-    itemMutation.mutate({ id });
+    deleteMutation.mutate({ id });
     setItems((prev) => prev.filter((item) => item.id !== id))
   }
 
@@ -44,12 +49,16 @@ export default function IndexPage() {
 
         <ul className='mt-4'>
           {items?.map(item => {
-            const { id, name } = item;
+            const { id, name, checked } = item;
             return (
               <li
                 key={id}
                 className="flex justify-between items-center border-b-2 p-2">
-                <span className='capitalize'>{name}</span>
+                <span
+                  onClick={() => toggleCheckItem(id, checked)}
+                  className={checked ? 'capitalize cursor-pointer line-through' : 'capitalize cursor-pointer'}>
+                  {name}
+                </span>
                 <HiX onClick={() => deleteItem(id)} className='text-xl text-red-500 cursor-pointer' />
               </li>
             )

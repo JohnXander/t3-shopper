@@ -26,7 +26,7 @@ const ItemModal: FC<ItemModalProps> = ({ setModalOpen, setItems }) => {
                     type="text"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    className="w-full bg-gray-200 rounded-md border-gray-300 shadow-sm focus:border-violet-300 focus:ring"
+                    className="w-full bg-gray-200 rounded-md border-gray-300 shadow-sm focus:border-violet-300 focus:ring p-2"
                 />
                 <div className="grid grid-cols-2 gap-8">
                     <button

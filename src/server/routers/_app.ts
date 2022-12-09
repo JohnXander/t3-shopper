@@ -21,8 +21,19 @@ export const appRouter = router({
   deleteItem: procedure
     .input(z.object({ id: z.string() }),)
     .mutation(async ({ input }) => {
-      const deletedUser = await prisma.shoppingItem.delete({ where: { ...input } });
-      return { deletedUser };
+      const deletedItem = await prisma.shoppingItem.delete({ where: { ...input } });
+      return { deletedItem };
+    }),
+  
+  toggleCheck: procedure
+    .input(z.object({ id: z.string(), checked: z.boolean() }))
+    .mutation(async ({ input }) => {
+      const {id, checked} = input
+      const editedItem = await prisma.shoppingItem.update({
+        where: { id },
+        data: { checked: !checked }
+      });
+      return { editedItem }
     }),
   
 });
