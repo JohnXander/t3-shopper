@@ -3,13 +3,21 @@ import Head from 'next/head'
 import { useState } from 'react';
 import ItemModal from '../components/ItemModal';
 import { trpc } from '../utils/trpc';
+import { HiX } from "react-icons/hi";
 
 export default function IndexPage() {
   const { data, isLoading } = trpc.getAllItems.useQuery();
   const itemsData = data?.foundItems;
+
+  const itemMutation = trpc.deleteItem.useMutation();
   
   const [items, setItems] = useState<ShoppingItem[]>(itemsData as ShoppingItem[]);
   const [modalOpen, setModalOpen] = useState<boolean>(false)
+
+  const deleteItem = (id: string) => {
+    itemMutation.mutate({ id });
+    setItems((prev) => prev.filter((item) => item.id !== id))
+  }
 
   if (!data || isLoading) return <p>Loading...</p>
 
@@ -36,11 +44,13 @@ export default function IndexPage() {
 
         <ul className='mt-4'>
           {items?.map(item => {
+            const { id, name } = item;
             return (
               <li
-                key={item.id}
-                className="flex justify-between items-center">
-                <span>{item.name}</span>
+                key={id}
+                className="flex justify-between items-center border-b-2 p-2">
+                <span className='capitalize'>{name}</span>
+                <HiX onClick={() => deleteItem(id)} className='text-xl text-red-500 cursor-pointer' />
               </li>
             )
           })}
